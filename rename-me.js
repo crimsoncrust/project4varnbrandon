@@ -22,16 +22,6 @@ var JSLibrary = {
             return true;
         }
 
-        //var pattern = /^[1-9]\d{2}-\d{3}-\d{4}$/;
-        ////var input = "407-695-0100";
-        //var matching = new RegExp(pattern);
-        //var result = input.search(matching);
-        //if(result<0){
-        //    return false;
-        //}
-        //else{
-        //    return true;
-        //}
     },
     patternEmail:function(input){
         var chunk = input.split('@');
@@ -55,17 +45,6 @@ var JSLibrary = {
         }
 
 
-
-        //var pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-        ////var input = "407-695-0100";
-        //var matching = new RegExp(pattern);
-        //var result = input.search(matching);
-        //if(result<0){
-        //    return false;
-        //}
-        //else{
-        //    return true;
-        //}
     },
     patternUrl:function(input){
         var first = input.split('//');
@@ -81,17 +60,6 @@ var JSLibrary = {
         }
         //console.log(first);
         return true;
-
-        //var pattern = /^(http(s?):\/\/){1}\S+/;
-        ////var input = "407-695-0100";
-        //var matching = new RegExp(pattern);
-        //var result = input.search(matching);
-        //if(result<0){
-        //    return false;
-        //}
-        //else{
-        //    return true;
-        //}
     },
     titleCase:function(input){
         var splitStringArray = input.split(' ');
@@ -120,3 +88,109 @@ var JSLibrary = {
             }
         }
         return result;
+    },
+    dateDiff:function(firstDate, secondDate, diffType){
+        var second=1000, minute=second*60, hour=minute*60, day=hour*24, week=day*7;
+        var date1 = new Date(firstDate);
+        var date2 = new Date(secondDate);
+        var timediff = date2 - date1;
+        if (isNaN(timediff)) return NaN;
+        if(diffType.toLowerCase() == 'hours'){
+            return timediff / hour;
+        }else if(diffType.toLowerCase() == 'days'){
+            return timediff / day;
+        }else{
+            return 'Undefined';
+        }
+
+    },
+    stringToNumber:function(input){
+        //var input = 42;
+        if(isNaN(input)){
+           var result = parseInt(input, 10);
+            if(isNaN(result)){
+                input = input.replace(input.charAt(0), '');
+                result = parseInt(input,10);
+
+            }
+            return result;
+
+        }else{
+            return 'Invalid input';
+        }
+    },
+    smallestNumber:function(arrayInput, givenNumber){
+        var newInputArray = arrayInput;
+        var result = 0;
+        for(var p=0,swapping; p<newInputArray.length-1; p++)
+        {
+            if(newInputArray[p]>newInputArray[p+1]){
+                swapping=newInputArray[p+1];
+                newInputArray[p+1] = newInputArray[p];
+                newInputArray[p] = swapping;
+
+            }
+        }
+        //alert(newInputArray);
+
+        for(var j=0;j<newInputArray.length;j++)
+        {
+            if(newInputArray[j]>givenNumber)
+            {
+                var t=newInputArray[j];
+                result = t;
+                break;
+            }
+        }
+
+        return result;
+    },
+    totalValue:function(inputArray){
+        var total = 0;
+        var j = 0;
+        var newInputArray =[];
+        for(var i=0;i<inputArray.length;i++)
+        {
+            if(typeof inputArray[i] == 'number')
+            {
+                
+                total=total+inputArray[i];
+            }
+        }
+
+        return total;
+    },
+    sorting:function(inputArray, keyValue){
+
+        //var inputArray = [{a:2},{b:3},{a:1},{a:4}];
+        var lookup = [];
+        var other = [];
+        for (var i = 0, len = inputArray.length; i < len; i++) {
+            var find = inputArray[i][keyValue];
+            if (typeof find != 'undefined'){
+                lookup.push(inputArray[i]);
+                //lookup[inputArray[i].a] = inputArray[i];
+            }else{
+                other.push(inputArray[i]);
+            }
+
+        }
+        //console.log(lookup);
+        var sortedArray = lookup.sort(dynamicSort(keyValue));
+        return sortedArray.concat(other);
+    }
+
+
+};
+
+function dynamicSort(property) {
+    var sortOrder = 1;
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+    return function (a,b) {
+        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
+}
